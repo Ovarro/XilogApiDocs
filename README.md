@@ -1,4 +1,4 @@
-<h1> Xilog API documentation </h1>
+<h1> Ovarro LoggerVision Xilog API documentation </h1>
 Questions? Find us at <a href=mailto:development@ovarro.com> development@ovarro.com </a>
 
 <h1> Xilog Data Access </h1>
