@@ -383,13 +383,13 @@ An array of loggers containing serial number and name.
       index: string,
       readingType: string,
       dataType: int,
-      UnitType: int,
-      location: {
-        latitude: number,
-        longitude: number
-      }
+      UnitType: int
     }
-  ]
+  ],
+  location: {
+    latitude: number,
+    longitude: number
+  }
 }]
 </pre>
 
