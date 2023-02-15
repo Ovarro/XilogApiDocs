@@ -43,7 +43,11 @@ An array of loggers containing serial number and name.
 [{
   serial: number,
   name: string,
-  channels: [string]
+  channels: [string],
+  location: {
+    latitude: number,
+    longitude: number
+  }
 }]
 </pre>
 
@@ -60,7 +64,11 @@ Example Output:
     "channels": [
       "Pipe 1",
       "Flow 1"
-    ]
+    ],
+    "location": {
+      "latitude: 51.6456,
+      "longitude: -1.6546
+    }
   },
   {
     "serial":87654321,
@@ -68,7 +76,11 @@ Example Output:
     "channels": [
       "Pipe",
       "Flow"
-    ]
+    ],
+    "location": {
+      "latitude: 51.6456,
+      "longitude: -1.6546
+    }
   }
 ]
 </pre>
@@ -371,7 +383,11 @@ An array of loggers containing serial number and name.
       index: string,
       readingType: string,
       dataType: int,
-      UnitType: int
+      UnitType: int,
+      location: {
+        latitude: number,
+        longitude: number
+      }
     }
   ]
 }]
@@ -394,7 +410,11 @@ Example Output:
         "dataType": 1,
         "unitType": 8
       }
-    ]
+    ],
+    "location": {
+      "latitude: 51.6456,
+      "longitude: -1.6546
+    }
   },
   {
     "serial":12345678,
@@ -412,7 +432,11 @@ Example Output:
         "dataType": 2,
         "unitType": 4
       }
-    ]
+    ],
+    "location": {
+      "latitude: 51.6456,
+      "longitude: -1.6546
+    }
   },
 ]
 </pre>
