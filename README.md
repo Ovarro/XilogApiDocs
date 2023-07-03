@@ -47,7 +47,10 @@ An array of loggers containing serial number and name.
   location: {
     latitude: number,
     longitude: number
-  }
+  },
+  tags: [{
+    name: string	
+  }]
 }]
 </pre>
 
@@ -68,7 +71,8 @@ Example Output:
     "location": {
       "latitude: 51.6456,
       "longitude: -1.6546
-    }
+    },
+    tags: []
   },
   {
     "serial":87654321,
@@ -81,6 +85,9 @@ Example Output:
       "latitude: 51.6456,
       "longitude: -1.6546
     }
+    "tags": [{
+      "name": "tag123"
+    }]
   }
 ]
 </pre>
