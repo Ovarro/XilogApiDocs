@@ -1,5 +1,5 @@
 <h1> Ovarro LoggerVision Xilog API documentation </h1>
-Questions? Find us at <a href=mailto:development@ovarro.com> development@ovarro.com </a>
+Questions? Find us at <a href=mailto:support.ld@ovarro.com> support.ld@ovarro.com </a>
 
 <h1> Xilog Data Access </h1>
 The Xilog API provides access to the raw data recorded by the Xilog logger. To use the API third parties must provide an authorization token with each request, which can be found <a href=https://atriumiot.com/accountmanagement>here</a>.
@@ -47,7 +47,10 @@ An array of loggers containing serial number and name.
   location: {
     latitude: number,
     longitude: number
-  }
+  },
+  tags: [{
+    name: string	
+  }]
 }]
 </pre>
 
@@ -68,7 +71,8 @@ Example Output:
     "location": {
       "latitude: 51.6456,
       "longitude: -1.6546
-    }
+    },
+    tags: []
   },
   {
     "serial":87654321,
@@ -81,6 +85,9 @@ Example Output:
       "latitude: 51.6456,
       "longitude: -1.6546
     }
+    "tags": [{
+      "name": "tag123"
+    }]
   }
 ]
 </pre>
