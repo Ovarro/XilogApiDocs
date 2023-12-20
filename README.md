@@ -77,7 +77,7 @@ Example Output:
 [
   {
     "id": "fc750aab-dd8e-4d6d-93fa-0e9a8a481706",
-    "serialNumber": "012509355",
+    "serialNumber": "123456789",
     "reference": "Test",
     "channels": [
       {
