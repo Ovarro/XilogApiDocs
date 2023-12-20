@@ -5,6 +5,11 @@ Questions? Find us at <a href=mailto:support.ld@ovarro.com> support.ld@ovarro.co
 The Xilog API provides access to the raw data recorded by the Xilog logger. To use the API third parties must provide an authorization token with each request, which can be found <a href=https://atriumiot.com/accountmanagement>here</a>.
 
 # Methods
+#### Xilog Flow
+- [*FlowLogger/All*](#loggeralltoken): Returns all loggers for the access token</li>
+- [*FlowData/All*](#dataallidstartdateenddatetoken): Returns all data for logger for the specified date range</li>
+- [*FlowData/Channel*](#datachannelidindexnamestartdateenddatetoken): Returns all data for logger for the specified channel and date range</li>
+
 #### Xilog NG
 - [*Logger/All*](#loggeralltoken): Returns all loggers for the access token</li>
 - [*Data/All*](#dataallserialnumberstartdateenddatetoken): Returns all data for logger for the specified date range</li>
@@ -19,7 +24,282 @@ The Xilog API provides access to the raw data recorded by the Xilog logger. To u
 - [*PlusData/MinMax*](#plusdataminmaxserialnumberchannelstartdateenddatetoken): Returns statistical data on each channel for the specified date range.</li>
 - [*DataTypes*](#xilog-datatypes): List of DataType enums.</li>
 - [*UnitTypes*](#xilog-unittypes): List of UnitType enums.</li>
+
 # API
+## FlowLogger/All/{token}
+#### Purpose
+Returns array of loggers for the access token
+#### Signature
+<ol>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/FlowLogger/All
+</li>
+<li> Params </li>
+  <ul>
+    <li>Token: (string - required)</li>
+    <ul>
+      <li>Access token</li>
+    </ul>
+  </ul>
+
+</ol>
+
+#### Return Value
+An array of loggers containing id, serial number and name.
+<pre>
+[{
+  id: string,
+  serialNumber: string
+  reference: string,
+  channels: [{
+    id: string,
+    name: string,
+    index: int,
+    type: string,
+    minTimestamp: string,
+    maxTimestamp: string
+  }],
+  latitude: number,
+  longitude: number,
+  min: string,
+  max: string,
+  tags: [{
+    name: string	
+  }]
+}]
+</pre>
+
+#### Example
+
+https://xilogdataapi.atriumiot.com/FlowLogger/All/00000000-0000-0000-0000-000000000000
+
+Example Output:
+<pre>
+[
+  {
+    "id": "fc750aab-dd8e-4d6d-93fa-0e9a8a481706",
+    "serialNumber": "012509355",
+    "reference": "Test",
+    "channels": [
+      {
+        "id": "6ad074df-a945-4a5d-9874-191062f2b257",
+        "name": "Total Pulses A",
+        "index": 1091,
+        "type": "Total Pulses",
+        "minTimestamp": "2023-12-16 07:51",
+        "maxTimestamp": "2023-12-20 07:50"
+      },
+      {
+        "id": "23f08689-07e4-4349-9fb0-6763ea78fc3d",
+        "name": "Signal Strength (RSSI)",
+        "index": 1014,
+        "type": "Network Quality",
+        "minTimestamp": "2023-12-16 07:51",
+        "maxTimestamp": "2023-12-20 07:50"
+      },
+    ],
+    "latitude": 50.8559393,
+    "longitude": -0.98549994,
+    "min": "2023-12-16 07:51",
+    "max": "2023-12-20 07:50"
+    tags: [{
+      "name": "tag123"
+    }]
+  }
+]
+</pre>
+
+## FlowData/All/{Id}/{StartDate}/{EndDate}/{Token}
+#### Purpose
+Returns a collection of the raw channel data for the specified Xilog Flow logger. (Max 8 days)
+#### Signature
+<ol>
+<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/FlowData/All/"> https://xilogdataapi.atriumiot.com/FlowData/All/</a>
+</li>
+<li> Params </li>
+  <ul>
+    <li>id: (string - required)</li>
+    <ul>
+      <li>Logger Id</li>
+    </ul>
+    <li>StartDate: (string - yyyy-MM-dd HH:mm)</li>
+    <ul>
+      <li>Date at which to start querying loggers channel data</li>
+    </ul>
+    <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
+    <ul>
+      <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
+    </ul>
+    <li>Token: (string - required)</li>
+    <ul>
+      <li>Access token</li>
+    </ul>
+  </ul>
+</ol>
+
+#### Return Value
+An object which contains an array of channels each containing an array of the channel data:
+<pre>
+[{
+  channel: {
+    id: string,
+    name: string,
+    index: int,
+    type: string,
+    minTimestamp: string,
+    maxTimestamp: string
+  },
+  data: [{
+    timestamp: string,
+    value: number
+   }]
+}]
+</pre>
+
+#### Example
+
+https://xilogdataapi.atriumiot.com/FlowData/All/00000000-0000-0000-0000-000000000000/2023-12-12%2000:00/2023-12-19%2000:00/00000000-0000-0000-0000-000000000000
+
+Example Output:
+<pre>
+[
+  {
+    "channelName": {
+        "id": "6ad074df-a945-4a5d-9874-191062f2b257",
+        "name": "Total Pulses A",
+        "index": 1091,
+        "type": "Total Pulses",
+        "minTimestamp": "2023-12-16 07:51",
+        "maxTimestamp": "2023-12-20 07:50"
+    },
+    "data":[
+      {
+        "timestamp": "2023-12-16 07:51",
+        "value": 488
+      },
+      {
+        "timestamp": "2023-12-17 07:50",
+        "value": 1167
+      },
+      {
+        "timestamp": "2023-12-18 07:50",
+        "value": 1931
+      }
+    ]
+  },
+  {
+    "channel": {
+      "id": "84094494-5177-4035-97f6-cc270e195fc4",
+      "name": "Signal Strength (RSSI)",
+      "index": 1014,
+      "type": "Network Quality",
+      "minTimestamp": "2023-12-16 07:51",
+      "maxTimestamp": "2023-12-20 07:50"
+    },
+    "data":[
+      {
+        "timestamp": "2023-12-16 07:51",
+        "value":13
+      },
+      {
+        "timestamp": "2023-12-17 07:50",
+        "value":9
+      },
+      {
+        "timestamp": "2023-12-18 07:50",
+        "value":16
+      }
+    ]
+  }
+]
+
+</pre>
+
+## FlowData/Channel/{Id}/{Index}/{StartDate}/{EndDate}/{Token})
+#### Purpose
+Returns a collection of the raw data for the specified Xilog Flow logger and channel index. (Max 8 days)
+#### Signature
+<ol>
+<li>Endpoint : <a href=" https://xilogdataapi.atriumiot.com/FlowData/Channel/">https://xilogdataapi.atriumiot.com/FlowData/Channel/</a>
+</li>
+<li> Params </li>
+  <ul>
+    <li>Id: (string - required)</li>
+    <ul>
+      <li>Logger Id</li>
+    </ul>
+    <li>Index: (string - required)</li>
+    <ul>
+      <li>Index of the channel to retrieve data from.</li>
+    </ul>
+    <li>StartDate: (string - yyyy-MM-dd HH:mm)</li>
+    <ul>
+      <li>Date at which to start querying loggers channel data</li>
+    </ul>
+    <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
+    <ul>
+      <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
+    </ul>
+    <li>Token: (string - required)</li>
+    <ul>
+      <li>Access token</li>
+    </ul>
+  </ul>
+</ol>
+<h3>Return Value</h3>
+An object which contains an array of the loggers channel data:
+<pre>
+{
+  channel: {
+    id: string,
+    name: string,
+    index: int,
+    type: string,
+    minTimestamp: string,
+    maxTimestamp: string
+  },
+  data: [{
+    timestamp: string,
+    value: number
+   }]
+}
+</pre>
+
+#### Example
+
+https://xilogdataapi.atriumiot.com/FlowData/Channel/00000000-0000-0000-0000-000000000000/1014/2023-12-12%2000:00/2023-12-19%2000:00/00000000-0000-0000-0000-000000000000
+
+Example Output:
+
+<pre>
+[
+  {
+    "channel": {
+      "id": "84094494-5177-4035-97f6-cc270e195fc4",
+      "name": "Signal Strength (RSSI)",
+      "index": 1014,
+      "type": "Network Quality",
+      "minTimestamp": "2023-12-16 07:51",
+      "maxTimestamp": "2023-12-20 07:50"
+    },
+    "data":[
+      {
+        "timestamp": "2023-12-16 07:51",
+        "value":13
+      },
+      {
+        "timestamp": "2023-12-17 07:50",
+        "value":9
+      },
+      {
+        "timestamp": "2023-12-18 07:50",
+        "value":16
+      }
+    ]
+  }
+]
+</pre>
+## ENDS HERE
+
 ## Logger/All/{token}
 #### Purpose
 Returns array of loggers for the access token
