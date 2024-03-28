@@ -298,7 +298,6 @@ Example Output:
   }
 ]
 </pre>
-## ENDS HERE
 
 ## Logger/All/{token}
 #### Purpose
