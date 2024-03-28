@@ -8,7 +8,7 @@ The Xilog API provides access to the raw data recorded by the Xilog logger. To u
 #### Xilog Flow
 - [*FlowLogger/All*](#flowloggeralltoken): Returns all loggers for the access token</li>
 - [*FlowData/All*](#flowdataallidstartdateenddatetoken): Returns all data for logger for the specified date range</li>
-- [*FlowData/Channel*](#flowchannelidindexnamestartdateenddatetoken): Returns all data for logger for the specified channel and date range</li>
+- [*FlowData/Channel*](#flowdatachannelidindexstartdateenddatetoken): Returns all data for logger for the specified channel and date range</li>
 
 #### Xilog NG
 - [*Logger/All*](#loggeralltoken): Returns all loggers for the access token</li>
