@@ -2,45 +2,89 @@
 Questions? Find us at <a href=mailto:support.ld@ovarro.com> support.ld@ovarro.com </a>
 
 <h1> Xilog Data Access </h1>
-The Xilog API provides access to the raw data recorded by the Xilog logger. To use the API third parties must provide an authorization token with each request, which can be found <a href=https://atriumiot.com/accountmanagement>here</a>.
+The Xilog API provides access to the raw data recorded by the Xilog logger. To use the API third parties must provide an authorization token with each request. The authorization token can be obtained by calling the auth endpoint with your Atrium credentials.
 
 # Methods
+#### Auth
+- [*auth*](#auth): Returns authentication bearer token.
+
 #### Xilog Flow
-- [*FlowLogger/All*](#flowloggeralltoken): Returns all loggers for the access token</li>
-- [*FlowData/All*](#flowdataallidstartdateenddatetoken): Returns all data for logger for the specified date range</li>
-- [*FlowData/Channel*](#flowdatachannelidindexstartdateenddatetoken): Returns all data for logger for the specified channel and date range</li>
+- [*FlowLogger/All*](#flowloggerall): Returns all loggers</li>
+- [*FlowData/All*](#flowdataallidstartdateenddate): Returns all data for logger for the specified date range</li>
+- [*FlowData/Channel*](#flowdatachannelidindexstartdateenddate): Returns all data for logger for the specified channel and date range</li>
 
 #### Xilog NG
-- [*Logger/All*](#loggeralltoken): Returns all loggers for the access token</li>
-- [*Data/All*](#dataallserialnumberstartdateenddatetoken): Returns all data for logger for the specified date range</li>
-- [*Data/Channel*](#datachannelserialnumberchannelnamestartdateenddatetoken): Returns all data for logger for the specified channel and date range</li>
-- [*Data/DailyStats*](#datadailystatsserialnumberstartdateenddatetoken): Returns statistical data on each channel for the specified date range.</li>
+- [*Logger/All*](#loggerall): Returns all loggers</li>
+- [*Data/All*](#dataallserialnumberstartdateenddate): Returns all data for logger for the specified date range</li>
+- [*Data/Channel*](#datachannelserialnumberchannelnamestartdateenddate): Returns all data for logger for the specified channel and date range</li>
+- [*Data/DailyStats*](#datadailystatsserialnumberstartdateenddate): Returns statistical data on each channel for the specified date range.</li>
 
 #### Xilog+
-- [*PlusLogger/All*](#plusloggeralltoken): Returns all loggers for the access token</li>
-- [*PlusData*](#plusdataserialnumberchannelstartdateenddatetoken): Returns all data for logger channel for the specified date range</li>
-- [*PlusData/ToUnits*](#plusdatatounitsserialnumberchannelstartdateenddateunittoken):Returns all data for logger channel for the specified date range, converted to a unit</li>
-- [*PlusData/Meter*](#plusdatameterserialnumberchannelstartdateenddatetoken): Returns meter data for a channel for the specified date range.</li>
-- [*PlusData/MinMax*](#plusdataminmaxserialnumberchannelstartdateenddatetoken): Returns statistical data on each channel for the specified date range.</li>
+- [*PlusLogger/All*](#plusloggerall): Returns all loggers</li>
+- [*PlusData*](#plusdataserialnumberchannelstartdateenddate): Returns all data for logger channel for the specified date range</li>
+- [*PlusData/ToUnits*](#plusdatatounitsserialnumberchannelstartdateenddateunit):Returns all data for logger channel for the specified date range, converted to a unit</li>
+- [*PlusData/Meter*](#plusdatameterserialnumberchannelstartdateenddate): Returns meter data for a channel for the specified date range.</li>
+- [*PlusData/MinMax*](#plusdataminmaxserialnumberchannelstartdateenddate): Returns statistical data on each channel for the specified date range.</li>
 - [*DataTypes*](#xilog-datatypes): List of DataType enums.</li>
 - [*UnitTypes*](#xilog-unittypes): List of UnitType enums.</li>
 
 # API
-## FlowLogger/All/{token}
+## auth
+
+##### Purpose
+Returns authentication bearer token. This token must be passed as an Authorization header for every request
+<pre>
+{
+  bearer {token}
+}
+</pre>
+
+##### Signature
+  1. Endpoint
+    - https://xilogdataapi.atriumiot.com/auth
+  2. Method
+    - POST
+
+##### Body
+
+<pre>
+{
+  "username": string,
+  "password": string,
+}
+</pre>
+
+##### Return Value
+
+<pre>
+[
+  string
+]
+</pre>
+
+##### Example
+
+https://xilogdataapi.atriumiot.com/auth
+<pre>
+{
+  "username": "user123",
+  "password": "myP4ssword!"
+}
+</pre>
+
+<pre>
+token
+</pre>
+
+<br />
+
+## FlowLogger/All
 #### Purpose
-Returns array of loggers for the access token
+Returns array of loggers
 #### Signature
 <ol>
-<li>Endpoint : https://xilogdataapi.atriumiot.com/FlowLogger/All
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/FlowLogger/All
 </li>
-<li> Params </li>
-  <ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
-    </ul>
-  </ul>
-
 </ol>
 
 #### Return Value
@@ -70,7 +114,7 @@ An array of loggers containing id, serial number and name.
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/FlowLogger/All/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/FlowLogger/All
 
 Example Output:
 <pre>
@@ -108,12 +152,12 @@ Example Output:
 ]
 </pre>
 
-## FlowData/All/{Id}/{StartDate}/{EndDate}/{Token}
+## FlowData/All/{Id}/{StartDate}/{EndDate}
 #### Purpose
 Returns a collection of the raw channel data for the specified Xilog Flow logger. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/FlowData/All/"> https://xilogdataapi.atriumiot.com/FlowData/All/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/FlowData/All/Id/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -128,10 +172,6 @@ Returns a collection of the raw channel data for the specified Xilog Flow logger
     <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -157,7 +197,7 @@ An object which contains an array of channels each containing an array of the ch
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/FlowData/All/00000000-0000-0000-0000-000000000000/2023-12-12%2000:00/2023-12-19%2000:00/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/FlowData/All/00000000-0000-0000-0000-000000000000/2023-12-12%2000:00/2023-12-19%2000:00
 
 Example Output:
 <pre>
@@ -214,12 +254,12 @@ Example Output:
 
 </pre>
 
-## FlowData/Channel/{Id}/{Index}/{StartDate}/{EndDate}/{Token})
+## FlowData/Channel/{Id}/{Index}/{StartDate}/{EndDate}
 #### Purpose
 Returns a collection of the raw data for the specified Xilog Flow logger and channel index. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href=" https://xilogdataapi.atriumiot.com/FlowData/Channel/">https://xilogdataapi.atriumiot.com/FlowData/Channel/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/FlowData/Channel/Id/Index/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -238,10 +278,6 @@ Returns a collection of the raw data for the specified Xilog Flow logger and cha
     <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -266,7 +302,7 @@ An object which contains an array of the loggers channel data:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/FlowData/Channel/00000000-0000-0000-0000-000000000000/1014/2023-12-12%2000:00/2023-12-19%2000:00/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/FlowData/Channel/00000000-0000-0000-0000-000000000000/1014/2023-12-12%2000:00/2023-12-19%2000:00
 
 Example Output:
 
@@ -299,21 +335,13 @@ Example Output:
 ]
 </pre>
 
-## Logger/All/{token}
+## Logger/All
 #### Purpose
-Returns array of loggers for the access token
+Returns array of loggers
 #### Signature
 <ol>
-<li>Endpoint : https://xilogdataapi.atriumiot.com/Logger/All
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/Logger/All
 </li>
-<li> Params </li>
-  <ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
-    </ul>
-  </ul>
-
 </ol>
 
 #### Return Value
@@ -335,7 +363,7 @@ An array of loggers containing serial number and name.
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/Logger/All/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/Logger/All
 
 Example Output:
 <pre>
@@ -371,12 +399,12 @@ Example Output:
 ]
 </pre>
 
-## Data/All/{SerialNumber}/{StartDate}/{EndDate}/{Token}
+## Data/All/{SerialNumber}/{StartDate}/{EndDate}
 #### Purpose
 Returns a collection of the raw channel data for the specified Xilog NG logger. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/Data/All/"> https://xilogdataapi.atriumiot.com/Data/All/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/Data/All/SerialNumber/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -391,10 +419,6 @@ Returns a collection of the raw channel data for the specified Xilog NG logger. 
     <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -423,7 +447,7 @@ LogTypes:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/Data/All/12345678/2021-08-05%2003:30/2021-08-05%2003:40/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/Data/All/12345678/2021-08-05%2003:30/2021-08-05%2003:40
 
 Example Output:
 <pre>
@@ -480,12 +504,12 @@ Example Output:
 
 </pre>
 
-## Data/Channel/{SerialNumber}/{ChannelName}/{StartDate}/{EndDate}/{Token})
+## Data/Channel/{SerialNumber}/{ChannelName}/{StartDate}/{EndDate}
 #### Purpose
 Returns a collection of the raw data for the specified Xilog NG logger and channel name. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href=" https://xilogdataapi.atriumiot.com/Data/Channel/">https://xilogdataapi.atriumiot.com/Data/Channel/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/Data/Channel/SerialNumber/ChannelName/StartDate/EndDate>
 </li>
 <li> Params </li>
   <ul>
@@ -504,10 +528,6 @@ Returns a collection of the raw data for the specified Xilog NG logger and chann
     <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -528,7 +548,7 @@ An object which contains an array of the loggers channel data:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/Data/Channel/12345678/Flow%201/2021-08-05%2003:30/2021-08-05%2003:40/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/Data/Channel/12345678/Flow%201/2021-08-05%2003:30/2021-08-05%2003:40
 
 Example Output:
 
@@ -567,12 +587,12 @@ Example Output:
 ]
 </pre>
 
-## Data/DailyStats/{SerialNumber}/{StartDate}/{EndDate}/{Token}
+## Data/DailyStats/{SerialNumber}/{StartDate}/{EndDate}
 #### Purpose
 Returns the daily data statistics for the serial number and specified date. 
 #### Signature
 <ol>
-<li>Endpoint : <a href=" https://xilogdataapi.atriumiot.com/Data/DailiyStats/">  https://xilogdataapi.atriumiot.com/Data/DailiyStats/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/Data/DailiyStats/SerialNumber/StartDate/EndDate</a>
 </li>
 <li> Params </li>
   <ul>
@@ -588,12 +608,7 @@ Returns the daily data statistics for the serial number and specified date.
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
     </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
-    </ul>
   </ul>
-
 </ol>
 
 #### Return Value
@@ -614,7 +629,7 @@ An object containing meta data for channel:
 </pre>
 #### Example
 
-https://xilogdataapi.atriumiot.com/Data/DailyStats/12345678/2021-08-15/2021-08-16/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/Data/DailyStats/12345678/2021-08-15/2021-08-16
 
 <pre>
 {
@@ -641,21 +656,13 @@ https://xilogdataapi.atriumiot.com/Data/DailyStats/12345678/2021-08-15/2021-08-1
 
 </pre>
 
-## PlusLogger/All/{token}
+## PlusLogger/All
 #### Purpose
-Returns array of loggers for the access token
+Returns array of loggers
 #### Signature
 <ol>
-<li>Endpoint : https://xilogdataapi.atriumiot.com/PlusLogger/All
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/PlusLogger/All
 </li>
-<li> Params </li>
-  <ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
-    </ul>
-  </ul>
-
 </ol>
 
 #### Return Value
@@ -681,7 +688,7 @@ An array of loggers containing serial number and name.
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/PlusLogger/All/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/PlusLogger/All
 
 Example Output:
 <pre>
@@ -727,12 +734,12 @@ Example Output:
 ]
 </pre>
 
-## PlusData/{SerialNumber}/{Channel}/{StartDate}/{EndDate}/{Token}
+## PlusData/{SerialNumber}/{Channel}/{StartDate}/{EndDate}
 #### Purpose
 Returns the channel data for the specified Xilog+ logger. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/PlusData/"> https://xilogdataapi.atriumiot.com/PlusData/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/PlusData/SerialNumber/Channel/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -751,10 +758,6 @@ Returns the channel data for the specified Xilog+ logger. (Max 8 days)
     <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -781,7 +784,7 @@ Channel object with an array of the channel data:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/PlusData/12345678/d1a/2021-08-05%2003:30/2021-08-05%2003:40/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/PlusData/12345678/d1a/2021-08-05%2003:30/2021-08-05%2003:40
 
 Example Output:
 <pre>
@@ -820,12 +823,12 @@ Example Output:
 
 </pre>
 
-## PlusData/ToUnits/{SerialNumber}/{Channel}/{StartDate}/{EndDate}/{unit}/{Token}
+## PlusData/ToUnits/{SerialNumber}/{Channel}/{StartDate}/{EndDate}/{unit}
 #### Purpose
 Returns the channel data for the specified Xilog+ logger, converted to a unit. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/PlusData/ToUnits"> https://xilogdataapi.atriumiot.com/PlusData/ToUnits/</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/PlusData/ToUnits/SerialNumber/Channel/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -849,10 +852,6 @@ Returns the channel data for the specified Xilog+ logger, converted to a unit. (
     <ul>
       <li>Unit enum to be converted to</li>
     </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
-    </ul>
   </ul>
 </ol>
 
@@ -877,7 +876,7 @@ Channel object with an array of the channel data:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/PlusData/ToUnits/12345678/d1a/2021-08-05%2003:30/2021-08-05%2003:40/1/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/PlusData/ToUnits/12345678/d1a/2021-08-05%2003:30/2021-08-05%2003:40/1
 
 Example Output:
 <pre>
@@ -916,12 +915,12 @@ Example Output:
 
 </pre>
 
-## PlusData/Meter/{SerialNumber}/{Channel}/{StartDate}/{EndDate}/{Token}
+## PlusData/Meter/{SerialNumber}/{Channel}/{StartDate}/{EndDate}
 #### Purpose
 Returns the meter channel data for the specified Xilog+ logger. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/PlusData/Meter"> https://xilogdataapi.atriumiot.com/PlusData/Meter</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/PlusData/Meter/SerialNumber/Channel/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -940,10 +939,6 @@ Returns the meter channel data for the specified Xilog+ logger. (Max 8 days)
     <li>EndDate: (string - yyyy-MM-dd)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -969,7 +964,7 @@ Channel object with an array of the channel data:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/PlusData/Meter/12345678/d1a/2021-08-05/2021-08-09/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/PlusData/Meter/12345678/d1a/2021-08-05/2021-08-09
 
 Example Output:
 <pre>
@@ -1004,12 +999,12 @@ Example Output:
 
 </pre>
 
-## PlusData/MinMax/{SerialNumber}/{Channel}/{StartDate}/{EndDate}/{Token}
+## PlusData/MinMax/{SerialNumber}/{Channel}/{StartDate}/{EndDate}
 #### Purpose
 Returns the min and max channel data for the specified Xilog+ logger. (Max 8 days)
 #### Signature
 <ol>
-<li>Endpoint : <a href="https://xilogdataapi.atriumiot.com/PlusData/MinMax"> https://xilogdataapi.atriumiot.com/PlusData/minMax</a>
+<li>Endpoint : https://xilogdataapi.atriumiot.com/v2/PlusData/minMax/SerialNumber/Channel/StartDate/EndDate
 </li>
 <li> Params </li>
   <ul>
@@ -1028,10 +1023,6 @@ Returns the min and max channel data for the specified Xilog+ logger. (Max 8 day
     <li>EndDate: (string - yyyy-MM-dd HH:mm)</li>
     <ul>
       <li>Date at which to finish querying loggers channel data. (No more than 8 days after start date) </li>
-    </ul>
-    <li>Token: (string - required)</li>
-    <ul>
-      <li>Access token</li>
     </ul>
   </ul>
 </ol>
@@ -1057,7 +1048,7 @@ Channel object with the min and max data:
 
 #### Example
 
-https://xilogdataapi.atriumiot.com/PlusData/MinMax/12345678/d1a/2021-08-05%2003:30/2021-08-08%2003:40/00000000-0000-0000-0000-000000000000
+https://xilogdataapi.atriumiot.com/v2/PlusData/MinMax/12345678/d1a/2021-08-05%2003:30/2021-08-08%2003:40
 
 Example Output:
 <pre>
