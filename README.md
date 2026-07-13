@@ -34,9 +34,7 @@ The Xilog API provides access to the raw data recorded by the Xilog logger. To u
 ##### Purpose
 Returns authentication bearer token. This token must be passed as an Authorization header for every request
 <pre>
-{
-  bearer {token}
-}
+  Authorization: bearer {token}
 </pre>
 
 ##### Signature
