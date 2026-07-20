@@ -32,7 +32,7 @@ The Xilog API provides access to the raw data recorded by the Xilog logger. To u
 ## auth
 
 ##### Purpose
-Returns authentication bearer token. This token must be passed as an Authorization header for every request
+Returns authentication bearer token. This token must be passed as an Authorization header for every request. The token will expire after 24 hours.
 <pre>
   Authorization: bearer {token}
 </pre>
